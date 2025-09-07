@@ -98,6 +98,45 @@ progress - a way of making sure that if a process is not inside the CS(ir it is 
 
 bounded waiting - a way of making sure that there wxists a bound (or limit) on the number of times other processes are allowed to enter the CS after a process has made a request to enter the CS and before that request is granted.
 
+########### sec 4 LOCK synchronization mechanism  ###########
+udemy - https://tvsmotor.udemy.com/course/operating-systems-online-course/learn/lecture/13331686#overview
+
+### (4_1) Synchronization with Lock variable and its disadvantage ###
+-------
+| NCS |
+-------
+
+while(lock!=0)               1) LOAD LOCK R1
+ lock=1                      2) CMP R1, #0
+                             3) JNZ step 1)
+                             4) STORE #1, LOCK
+-------
+| CS |
+-------
+
+lock = 0                     1) STORE #0 LOCK 
+
+-------
+| NCS |
+-------
+
+lock ---> lock is a bolean variable which indicates no of process inside CS at any point of time
+
+1) Mutula exclusion    - no
+
+### (4_2) progress condition for lock variable ###
+
+lock 0 ---> no of process inside CS = 0
+lock 1 ---> no of process inside CS = 1
+
+2) progress  - yes
+
+### (4_3) Bounded Waiting Condition for Lock variable ###
+
+3) bounded waiting - no
+
+
+
 
 
 
