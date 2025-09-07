@@ -819,6 +819,220 @@ p[0]	p[1]	p[2]	p[3]
 |		|       |       |
 m[0]	m[1]	m[m[2]	m[m[3]
 
+########### sec 16  Counting semaphore  ###########
+
+### 16_1  Introduction to Counting Semaphore ###
+
+struct semaphore {
+	int value;
+	Queuetype L;
+}
+
+value - 3
+L	  -
+
+
+down(s)
+----------
+CS	p1,p2,p3
+----------
+up(s)
+
+	semaphore
+________|_______
+|				|
+binary		counting
+semaphore	semaphore
+(mutex)
+
+### 16_2  Down() System call for Counting Semaphore ###
+
+down( semaphore S )
+{
+	s.value = s.value - 1;
+	if( s.value < 0)
+	{
+		put process's PCB in S.L;
+		sleep();
+	}
+}
+
+if s.value = +n
+	it means n processes can enter CS further and 0 processes are waiting in the queuee of S
+if s.value = -n
+	it means 0 processes can enter the CS further and n processes are waiting in the queue of S
+if s.value=0
+	it means 0 processes can enter the CS further and 0 processes are waiting in the queue of S
+
+### 16_3  Down System call for Counting Semaphore ###
+
+### 16_4  Up() System call for Counting Semaphore ###
+
+LIFO queue
+FIFO queue
+### 16_5  Example to illustrate Up() and Down() ###
+
+S.value = 3,2,1,0,-1,-2,-1,0,1
+
+a counting semaphore was initialized to 12. Then 8 wait and 5 signal operations were performed on this semaphore.
+what will be the value of this semaphore variable after performing these operations?
+	12-8+5
+
+s.value=15, 17p and 3v operations performed?
+	15-17+3 = 1
+
+
+### 16_5  Example to illustrate Up() and Down() ###
+
+let S be the counting semaphore variable. let p and v operations of counting semaphore are implemented using two binary semaphores xb and yb
+and wait and signal operations of these binary semaphores.
+the wait and signal operations of binary semaphores are represented by pb() and vb() respectively.
+
+p(s)				|	p(s)					
+pb(xb)              |   pb(xb)              
+s=s-1               |   s=s-1  
+					|
+if(s<0)             |   if(s<0)             
+	{               |   	{               
+		vb(xb)      |   		vb(xb)      
+		pb(yb)      |   		pb(yb)      
+	}               |   	}               
+else{               |   else{               
+	vb(xb)			|   	vb(xb)			
+}					|   }					
+					|   					
+					|   					
+
+p1			p2
+
+p(s)		p(s)
+	CS			CS
+v(s)	    v(s)	
+
+
+########### sec 17  Deadlock  ###########
+
+### 17_1  Deadlock and Starvation ###
+Resource : anyphysical or virtual component in a computer ( which is available in limited quantity)
+Deadlock : A situation in which two or more processes are unable to proceed because rach one of them is waiting
+		   for one of the others to do something
+starvation: a situation in which a runnable process is overlocked indefinitely by the scheduler.
+
+
+p1--->rewust(OS)---> Acquires 2 uses-------------------> releases resources
+				 |		 |								|
+				 |		 | resources become free		|	
+				 |--->	process blocked-----------------|
+
+### 17_2 Necessary condition for Deadlock - Mutual Exclusion ###
+1) mutual exclusion
+2) hold & wait
+3) no preemption of resource
+4) circular wait
+
+### 17_3 Necessary condition for Deadlock - Hold and Wait ###
+
+### 17_4 Necessary condition for Deadlock - No Preemption ###
+
+### 17_5 Necessary condition for Deadlock - Circular Wait ###
+
+### 17_6 Minimum Number of resources needed so that deadlock can never happen ###
+
+resources are of 2 types
+	1) single instance resources
+	2) multiple instance resources
+
+a resource instance should be used by only one process at a time--->mutual exclusion
+
+a system is having 4 user processes each requring 2 instances of resource 'R'. The minimum number of units of R such that no deadlock will occur is 
+
+
+give (n-1) resources to every process. The will give the maximum no of resources needed such that deadlock can happen
+
+give 1 more resource overall. this will give the minimum no of resirces needed such that deadlock will not happen
+
+
+maximum no of resorces needed such that deadlock can happen
+
+### 17_7 Problems ###
+5 processes
+
+each process needs 2 insrance of r. find minimum no of resources such that deadlock can never happen?
+
+	P1	p2	P3	P4	P5
+	|	|	|	|	|
+	r1	r2	r3	r4	r5	r6
+
+
+### 17_8 Maximum number of processes that can be present so that deadlock can be avoided ###
+
+
+there are 5 units of resources and if each process pi requires 2 units to finish execution what is the maximum no of processes that can be system.
+so that there will be no deadlock?
+
+p = no of process
+n = no of resources needed by single process
+r1	r2	r3	r4
+|	|	|	|
+p1	p2	p3	p4
+
+
+number of res = p(n-1)+1
+number of res >= p(n-1)+1
+			5 >= p(2-1)+1
+			5 >= p+1 -> 4 >= p
+				p <= 4
+
+
+### 17_9 Problems ###
+there are 18 units of resource and if each process pi requires 5 units to finish execution. what is the maximum no of processes that can bein the system
+so that there will be no deadlock?
+
+########### sec 18  Deadlock handling methods ###########
+
+### 18_1   4 ways of handling deadlock ###
+
+1) deadlock prevention
+2) deadlock avoidance
+3) deadlock ignorance
+4) deadlock detection & recovery
+
+### 18_1  Deadlock Prevention Techniques ###
+
+disable one or more of the necessary conditions of deadlock
+
+
+necessary conditions for deadlock
+1) mutual exclusion
+2) hold & wait
+3) no preemption
+4) circular wait
+
+### 18_2  Deadlock Avoidance using Banker's Algorithm  ###
+
+		allocation		| 	maximum
+		x	| y	| z			x	| y	| z
+p0		0	  0	  1			8	  4   3		
+p1		3	  2   0			6     2   0 	
+p2		2	  1	  1			3	  3	  3			
+
+
+available
+	x | y | z
+p0  8	4	2
+p1	3	0	0
+p2	1	2	2
+
+p0, p1, p2 - process
+x, y, z    - resources
+
+
+maximum -> maximum number of resources ( x, y, z) which are necessary to complete execution
+allocation -> number of resources ( x, y, z) which are allocated to processes (p0, p1,p2) at this point of time
+
+
+
+
 
 
 
