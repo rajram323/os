@@ -1,4 +1,4 @@
-########### sec 1 ###########
+########### sec 1 Introduction ###########
 gfg - https://tvsmotor.udemy.com/course/operating-systems-online-course/learn/lecture/13215020#overview
 
 ### (1_1) ###
@@ -47,13 +47,56 @@ cout--;        LOAD COUNT R1; _____control change
 p1-1,2,3,4,5 | p2-1,2,3 | p1-6,7
 
 
+########### sec 2 Critical Section and Race Condition  ###########
+gfg - https://tvsmotor.udemy.com/course/operating-systems-online-course/learn/lecture/13331498#overview
+
+### (2_1) Critical Section and Race Condition Explained ###
+
+race condition --->
+
+### (2_2) Why Race Condition happens ###
+
+### (2_3) More on Critical Section and Non Critical Section ###
+
+critical section ---> It is the part of program where share memory is accessed.
+
+race condition ---> The order of execution of instructions of process defines the resulot produced.
+
+### (2_4) Synch  ###
+p1
+
+NCS
+-----
+(entry section)
+----
+CS
+---
+(exit section)
+---
+NCS
+
+depending of entry and exit section there are many synch mechanism.
+
+########### sec 3 Various conditions of synch mechanism  ###########
+gfg - https://tvsmotor.udemy.com/course/operating-systems-online-course/learn/lecture/13331630#overview
+
+### (3_1)  Basic Idea of Mutual Exclusion ###
+
+mutual exclusion - a way of making sure that if one process is executing the CS, then other process cannot enter the CS
+                   until the executing process comes out of the CS.
+
+1) mutual exclusion
+2) progress
+3) bounded waiting
 
 
+### (3_2)  Basic Idea of Mprogress ###
 
+progress - a way of making sure that if a process is not inside the CS(ir it is in NCS), then it will not block other process from entering the CS.
 
+### (3_3)  Basic Idea of bounded waiting ###
 
-
-
+bounded waiting - a way of making sure that there wxists a bound (or limit) on the number of times other processes are allowed to enter the CS after a process has made a request to enter the CS and before that request is granted.
 
 
 
