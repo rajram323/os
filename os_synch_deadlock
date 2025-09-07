@@ -135,6 +135,150 @@ lock 1 ---> no of process inside CS = 1
 
 3) bounded waiting - no
 
+### (4_4) Features of Lock Synchronization ###
+
+      synch
+  _____|_____     
+busy      nonbusy
+
+
+1) multi process solution
+2) busy waiting time solution
+3) implement at user mode
+4) no hardware support
+
+
+########### sec 5 TSL synchronization mechanism  ###########
+udemy - https://tvsmotor.udemy.com/course/operating-systems-online-course/learn/lecture/13331788#overview
+
+### (5_1) Important : Basics of Assembly Code ###
+
+JNZ - jump if zeroflag is not set
+
+
+|_|_|_|_|
+ z v s c
+
+CMP A,B
+  if A=B, z=1
+  else z=0
+
+if z=1 , we say z flag is set
+else z flagi is not set
+
+### (5_2) When Mutual Exclusion can be violated in Lock synchronization mechanism ###
+
+-------
+| NCS |
+-------
+
+while(lock!=0)               1) LOAD LOCK R1______________control change
+ lock=1                      2) CMP R1, #0
+                             3) JNZ step 1)
+                             4) STORE #1, LOCK
+-------
+| CS |
+-------
+
+lock = 0                     1) STORE #0 LOCK 
+
+-------
+| NCS |
+-------
+
+p1: 1 | p2: 1,2,3,4 | p1: 2,3,4 
+
+p1: 1,2 | p2: 1,2,3,4 | p1: 2,3,4 
+r1=0      r1=0
+z=0       z=1 
+
+### (5_3)  ###
+
+1) LOAD LOCK R1      _____no
+2) CMP R1, #0        _____no
+3) JNZ step 1)       _____no
+4) STORE #1, LOCK                    
+
+1) LOAD LOCK R1      _____no
+2) STORE #1, LOCK    _____no
+3) CMP R1,#0    
+4) JNZ step 1)
+
+### 5_4 TSL Synchronization Mechanism Explained ###
+
+TSL(Test and Set lock)
+  1) TSL (LOCK)          |  entry section
+  2) CMP R1, #0          |
+  3) JNZ step 1);        |
+
+  CS
+
+  4) STORE #0 , LOCK
+_________________________________________
+
+TSL(LOCK){
+  Boolean R1;
+  R1 = LOCK;
+  LOCK = 1;
+  return (R1)
+}
+
+instruction set  - ( ADD, JUMP, LOAD, TSL)
+h/w or platform independent
+
+### 5_5 TSL - Mutual Exclusion, Progress, Bounded Waiting ###
+
+1) mutual exclusion  - yes
+2) progress          - yes
+3) bounded waiting   - no
+4) hw dependent
+
+### 5_6 Features of TSL Synchronization Mechanism ###
+
+1) Busy waiting soln    - no
+2) multi process soln   - yes
+3) hw support necessary - no
+4) implement in user mode
+
+########### sec 6 problems with TSL ###########
+udemy - https://tvsmotor.udemy.com/course/operating-systems-online-course/learn/lecture/13331920#overview
+
+### 6_1 Checking of Starvation Problem ###
+
+The entercs() and leavescs() functions to implement the critical section of a process are realised using test and set (TSL)
+instruction as follows:
+
+  void enters(x)
+  {
+      while(testandset(x);
+  }
+
+  CS
+
+  void leaves(x)
+  {
+      x=0;
+  }
+
+x is initialised to 0 which of the following is true?
+A) the solution is starvation free
+B) process enter cs in FIFO order
+C) more than 1 process can enter the CS at the same time
+D) the above solution is deadflock free
+
+Boolean testandset(x)
+{
+    Bolean R1;
+    R1=x;
+    x=1;
+    rerturn R1;
+}
+
+
+
+
+
+
 
 
 
