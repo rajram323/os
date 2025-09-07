@@ -327,7 +327,7 @@ b) guarantee progress but not ME
 c) guarantee both ME and progress
 d) guarantee neither ME and progress
 
-########### sec 8  ###########
+########### sec 8 Disable Interrrupts Synchronization Mechanism ###########
 udemy - https://tvsmotor.udemy.com/course/operating-systems-online-course/learn/lecture/13332126#overview
 
 ### 8_1 Disabling Interrupts Synchronization Explained Completely ###
@@ -347,7 +347,257 @@ bounded waiting
 ### 8_2 Features of Disabling Interrupts and its disadvantage ###
 	hw dependence
 
+########### sec 9  interested Variabls Synchronization Mechanism ###########
+udemy - https://tvsmotor.udemy.com/course/operating-systems-online-course/learn/lecture/13332192#overview
 
+### 8_1 Interested Synchronization Mechanism Explained ###
+
+Interested variables
+Instead of one variable in turn variable synch mechanism, here we use 2 variables:
+	Interested 0 = T or F			| Interested i indicates wheather process , Pi is interested in 
+	Interested 1 = T or F			| in entering the CS or not ( i can take value 0 or 1 )
+	
+
+P0											
+while( 1 )								|	while( 1 )					
+{                                       |   {                             
+	NON CS                              |   	NON CS                    
+----------------------              	|   ----------------------                         
+	Interested 0 = T					|   	Interested 0 = T		
+	while( Interested = T)          	|   	while( Interested = T)    
+----------------------					|   ----------------------						
+
+	CS                                  |   	CS   
+
+----------------------             	 	|   ---------------------- 									|   							
+	Interested 0 = F                    |   	Interested 0 = F          
+----------------------              	|   ----------------------                                     |    
+}                                       |   }
+
+### 8_2 Interested Synchronization Mutual Exclusion ###
+Mutual Exclusion - yes
+
+
+### 8_3 Interested Synchronization - progress ###
+If no process is inside the CS and some processes wish to enter the CS, then the decision on which process to enter the CS
+should only be taken by processes which are not in NCS and this decision should not be postponed indefinitely.
+
+ If a process is in NCS, then it shouldnot block other process from entering the CS.
+
+if ... deadlock ---> progress___no
+
+
+p0									|		p1								
+while( 1 )                          |       while( 1 )                     
+{                                   |       {                              
+	NON CS                          |       	NON CS                     
+---------------------------         |       ---------------------------    
+	while ( turn == 1)              |       	while ( turn == 0)         
+---------------------------         |       ---------------------------    
+	                                |       	                           
+	CS                              |       	CS                         
+                                    |                                      
+---------------------------         |       ---------------------------    
+	turn = 1                        |       	turn = 0                  
+---------------------------			|       ---------------------------		
+	NON CS							|       	NON CS						
+									|       								
+}									|       }								
+
+### 8_4 Interested Synchronization - progress continued ###
+
+Interested
+
+### 8_5 Interested Synchronization - bounded waiting ###
+
+Mutual Excution -	yes 
+Progress		-	no
+Deadlock		-	no
+
+########### sec 10  Peterson Synchronization Mechanism ###########
+udemy - https://tvsmotor.udemy.com/course/operating-systems-online-course/learn/lecture/13332240#overview
+
+### 10_1 Peterson Synchronization Mechanism intro ###
+
+
+Peterson Method = ( turn + Interested )
+--------------------------------GLOBAL variable--------------
+Interested[ 0 ] = F;
+Interested[ 1 ] = F;
+int turn
+___________________________________
+
+void Entry_section( int process )			entry section
+{
+	int other = 1 - process;
+	Interested[ process ] = T;
+	turn = process;
+	while( Interested[ other ] == T
+				&&
+			turn = process )
+}
+___________________________________
+		CS
+___________________________________
+void Exitsection( in process )
+{
+	Interested[ process ] = F;
+}
+
+
+### 10_2 Difference between Local and Global Variables ###
+
+void Entry_section( int process )			entry section
+{
+
+1)	int other = 1 - process;
+2)	Interested[ process ] = T;
+3)	turn = process;
+4)	while( Interested[ other ] == T
+				&&
+			turn = process )
+}
+___________________________________
+		CS
+___________________________________
+void Exitsection( in process )
+{
+1)	Interested[ process ] = F;
+}
+----------------------------------------------------	
+P0
+entry_section(0)			entry_section(1)
+
+CS							CS
+
+exit_section(0)				exit_section(1)
+
+process=0					process=1
+other=1						other=0
+
+
+### 10_3 Peterson Synchronization Mechanism Explained ###
+
+
+### 10_4 Peterson Synchronization Mechanism Continued ###
+
+p0 1,2 | p1 1,2,3 | p0 3,4,4 | p1 4 
+
+### 10_4 Peterson Synchronization Mechanism - Mutual Exclusion ###
+
+Mutual Exclusion - yes
+
+### 10_5 Peterson Synchronization Mechanism - Progress ###
+
+progress - if no process is inside the CS and some processes wish to enter the CS, then the decision on which process
+to enter the CS should be taken by processes which are not in NCS and that decision should not be postponed indefinitely.
+
+	I[ 0 ] ] = F
+	I[ 1 ]	= F
+
+### 10_6 Peterson Synchronization Mechanism - Bounded Waiting ###
+
+p0: 1,2,3,4, CS | p1: 1,2,3,4,4,4 | p0: 1,2,3,4 | p1:
+
+### 10_7 Features of Peterson Synchronization Mechanism ###
+
+Adv:
+1. 
+2. No H/W
+3. user mode
+
+Disadv:
+1. 2-process
+2. Busy waiting solution
+
+########### sec 11  Problems on Non busy waiting synchronization techniques ###########
+udemy - https://tvsmotor.udemy.com/course/operating-systems-online-course/learn/lecture/13332420#overview
+
+### 11_1 Disadvantages of Busy Waiting Synchronization Techniques ###
+
+disadvantage of busy waiting synch mechanish
+	1) wastes CPU time
+	2) priority inversion pblm
+			only if we use priority.
+
+### 11_2 problem 1 ###
+
+consider peterson's algorithm for mutual exclusion b/w 2 concurrent processes, i and j. The program executed by process i is shown below:
+
+	repeat
+		flag[ i ] = TRUE
+		turn = j
+		while( p )
+
+		CS
+
+		flag[ i ] = FALSE
+
+for the program to guarantee mutual exclusion, the predicate P in the while loop should be ___
+
+A) flag[ j ]= TRUE and turn = i	----X
+B) flag[ j ]= TRUE and turn = j	----
+C) flag[ j ]= TRUE and turn = i	----X
+D) flag[ j ]= TRUE and turn = i	----X
+
+while( flag[j]==TRUE and turn==j)
+
+	turn = i
+
+### 11_3 problem 2 ###
+
+two processes X and Y need to access a critical section consider the following synchronization construct used by both the processes
+
+process X
+	while( true )
+	{
+		varX = TRUE
+		while( varY==TRUE)
+		{
+			CS
+			varX=FALSE
+		}
+	}
+____________________________________________________
+process Y
+	while( true )
+	{
+		varY = TRUE
+		while( varX==TRUE)
+		{
+			CS
+			varX=FALSE
+		}
+	}
+
+### 11_4 Introduction to Non Busy Waiting Synchronization Techniques ###
+
+Non Busy waiting synchronization mechanism
+|
+sleep_wakeup
+|
+block_wakeup
+p1									|	p1								
+while( p2 is inside CS )            |   while( p1 is inside CS )        
+--------------------------          |   --------------------------      
+	CS                              |   	CS                          
+_______________________________     |   _______________________________ 
+if( p2 is inisde CS)                |   if( p1 is inisde CS)            
+	{                               |   	{                           
+		sleep()                     |   		sleep()                 
+	}                               |   	}                           
+--------------------------			|   --------------------------		
+	CS                              |		CS                          
+--------------------------          |   --------------------------      
+									|   								
+wakeup(p2)                          |   wakeup(p1)                      
+									|   								
+									
+p1
+p2
+p3___ready
+p4
+p5___blocked		
 
 
 
