@@ -327,6 +327,28 @@ b) guarantee progress but not ME
 c) guarantee both ME and progress
 d) guarantee neither ME and progress
 
+########### sec 8  ###########
+udemy - https://tvsmotor.udemy.com/course/operating-systems-online-course/learn/lecture/13332126#overview
+
+### 8_1 Disabling Interrupts Synchronization Explained Completely ###
+
+while( 1 )
+{
+	disable interupts
+	CS
+	enable interupts
+}
+
+
+me
+progress
+bounded waiting
+
+### 8_2 Features of Disabling Interrupts and its disadvantage ###
+	hw dependence
+
+
+
 
 
 
