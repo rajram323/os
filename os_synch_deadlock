@@ -274,8 +274,14 @@ Boolean testandset(x)
     rerturn R1;
 }
 
+### 6_2 Checking of Starvation Problem ###
 
 
+P1, P2, P3....P500
+_________________>500 
+
+### 6_2 Checking of Starvation Problem ###
+deadlock circular wait
 
 
 
