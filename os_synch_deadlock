@@ -1,0 +1,67 @@
+########### sec 1 ###########
+gfg - https://tvsmotor.udemy.com/course/operating-systems-online-course/learn/lecture/13215020#overview
+
+### (1_1) ###
+-------
+|      |
+|------|
+| P1   |  PCB of P1      communication "shared memory"
+|------|
+|      |
+|------|      
+| p2   |  PCB of P2
+|------| 
+|      |
+|------|
+| CS   |
+|------|    
+
+
+
+### (1_2) ###
+High level ---> Assembly ---> Machine code
+
+f1(){
+---
+--
+cout++;        LOAD COUNT R1; _____control change       
+---            INCR R1;
+--             STORE R1 COUNT; 
+--
+}
+
+f2(){
+---
+--
+cout--;        LOAD COUNT R1; _____control change          
+---            DECR R1;
+--             STORE R1 COUNT; 
+---
+--
+}
+
+### (1_3) ###
+1) Non premtive
+2) Synchronization mechanism
+
+p1-1,2,3,4,5 | p2-1,2,3 | p1-6,7
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
