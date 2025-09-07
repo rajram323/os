@@ -283,10 +283,49 @@ _________________>500
 ### 6_2 Checking of Starvation Problem ###
 deadlock circular wait
 
+########### sec 7 Strict alteratin syschronization mechanism ###########
+udemy - https://tvsmotor.udemy.com/course/operating-systems-online-course/learn/lecture/13332126#overview
 
+### 7_1 Strict Alternation Synchronization - Mutual Exclusion, Progress ###
+while(1)											                      |	while(1)																			
+{                                                   |    {   
+													                          |		 NCS	
+    while( turn==1 )       // entry section         |        while( turn==0 )       // entry section
+                                                    |    
+    CS                                              |        CS
+                                                    |    
+    turn = 1;                                       |       turn = 0;
+}                                                   |   }
+    
+### 7_2 Strict Alternation - Bounded Waiting ###
+bounded waiting - yes
 
+one after another
 
+### 7_3 Strict Alternation - Bounded Waiting ###
 
+1) busy waiting soln
+2) 2 process soln
+3) h/w or platform independent
+4) implement in user code
+
+### 7_4 Features of Strict Alternation Synchronization Mechanism ###
+consider the methods used by process P1 and P2 for accesing their critical sections whenever needed as given below.
+The initial values of shared boolean variables , S1 and S2 are raindable assigned.
+
+method used by P1      |     methos used by p2
+
+while(s1 == s2)       |      while( s1 != s2 )
+
+CS                            CS
+
+s1=s2                 |    s1 != s2
+
+what of the following is true/
+a) guarantee ME but not progress
+b) guarantee progress but not ME
+c) guarantee both ME and progress
+d) guarantee neither ME and progress
 
 
 
