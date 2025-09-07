@@ -599,6 +599,226 @@ p3___ready
 p4
 p5___blocked		
 
+########### sec 12  Peterson Synchronization Mechanism ###########
+udemy - https://tvsmotor.udemy.com/course/operating-systems-online-course/learn/lecture/13332474#overview
+
+### 12_1  Producer Consumer Problem ###
+
+# define N 10			// total no of slots in buffer
+# define count 0		// no of slots filled in the buffer
+
+void producer()							|	void consumer()						
+{								        |   {								    
+	int nums;                           |   	int nums;                       
+	while( 1 )                          |   	while( 1 )                      
+	{                                   |   	{                               
+		num = produced_num();           |   		       
+		                                |   		                            
+		if( count == N)                 |   		if( count == N)             
+			sleep();                    |   			sleep();                
+		                                |   		                            
+		insert_num(num) 	            |   		num = remove_num()	        
+		                                |   		                            
+		count = count + 1               |   		count = count - 1           
+										|   									
+		if(count == 1)                  |   		if(count == N-1)              
+			wakeup(consumer)            |   			wakeup(prooducer)        
+	                                    |   	                                
+	}                                   |   	}                               
+                                        |                                       
+}                                       |   }                                   
+
+### 12_1  Producer Consumer Problem Continued ###
+### 12_3  Producer Consumer Problem Continued ###
+
+
+
+########### sec 13  Binary semaphore ###########
+udemy - https://tvsmotor.udemy.com/course/operating-systems-online-course/learn/lecture/13332590#overview
+
+### 13_1  Basic idea of Structure in C programming ###
+
+int a;
+float b;
+
+struct node {
+	int a;
+	float b;
+};
+struct node S;
+_______________________________________________
+struct semaphore{
+	boolean value;
+	QueueType L;
+}
+
+S.value
+S.L
+
+
+### 13_2  Binary Semaphores Explained 1 ###
+
+while(1){
+	wait(S);
+		CS
+	signal(S);
+}
+__________________________________________
+wait(semaphore S){
+
+	if(S.value == 1)
+		S.value = 0;
+	else{
+		put the process's PCB in S.L;
+		sleep();
+	}
+}
+__________________________________________
+signal(semaphore S){
+
+	if(S.L is empty)
+		s.value = 1
+	else{
+		select a process from S.L;
+		wakeup();
+	}
+}
+
+### 13_3  Binary Semaphores Explained 2 ###
+	Binary semaphore (mutex )
+	counting semaphore( mutex )
+
+
+### 13_4 Wait () and Signal () System Calls ###
+
+
+### 13_5 Wait and Signal synchronization mechanism - ME, Progress, Bounded Waiting ###
+
+Mutual Exclusion - yes
+progress		 - yes
+bounded waiting	 - yes
+
+
+### 13_6 Features of Wait and Signal Synchronization ###
+
+multiprocess - yes
+kernel mode	 - 
+h/w independence - yes
+
+### 13_7 Other names for Wait and Signal System Calls ###
+
+wait()
+P()
+down()
+
+
+
+signal()
+V()
+up()
+
+binary semaphore or mutex
+counting semaphore
+
+########### sec 14  problems on binary semaphore  ###########
+
+########### sec 15  Dining philosopher problem  ###########
+
+### 15_1  Problem based on Dining Philosopher Problem ###
+
+let m[0], m[1],...m[3] be mutexes and p[0], p[1], p[3] be processes.
+each process p[i] executes:
+
+	
+	while(1)
+	{
+		down( m[i] );
+		down( m[(i+1) % 4]);
+		
+		CS
+		
+		
+		up( m[i] );
+	    up( m[(i+1) % 4]);
+	}
+
+
+
+	p[0]				|	p[1]				|		p[2]				|		p[3]			
+	while(1)			|	while(1)		    |        while(1)		    |        while(1)		
+	{                   |   {                   |        {                  |        {                
+		wait(m[0]);     |   	wait(m[1]);     |        	wait(m[2]);     |        	wait(m[3]);  
+		wait(m[1]);     |   	wait(m[2]);     |        	wait(m[3]);     |        	wait(m[0]);  
+		                |   	                |        	                |        	             
+		CS              |   	CS              |        	CS              |        	CS           
+		                |   	                |        	                |        	             
+		signal(m[0]);   |   	signal(m[1]);   |        	signal(m[2]);   |        	signal(m[3]);
+		signal(m[1]);   |   	signal(m[2]);   |        	signal(m[3]);   |        	signal(m[0]);
+	}                   |   }                   |        }                  |        }                
+	
+
+### 15_2  Trick to avoid Deadlock ###
+	
+### 15_3  Dining Philosopher Problem Explained ###
+
+let m[0], m[1],...m[3] be mutexes and p[0], p[1], p[3] be processes.
+each process p[i] executes:
+
+	
+	while(1)
+	{
+		down( m[i] );
+		down( m[(i+1) % 4]);
+		
+		CS
+		
+		
+		up( m[i] );
+	    up( m[(i+1) % 4]);
+	}
+
+dining philosopher problem
+		PO
+	M1	|	Mo
+	|---------|
+P3 -|  Rice	  |	-P1	
+    |---------|
+  M2	|	   M3
+	    P2
+
+
+Pi
+1) Take the left fork ( M_i )
+2) Take the right fork ( M_i+1%4  )
+3) EAt
+4) Drop the left fork ( M_i)
+5) Drop the right fork ( M_i+1%4 )
+
+### 15_4  Another Variation of Dining Philosopher Problem ###
+
+
+4 process p[0], p[1]...p[3]
+4 mutexes m[0], m[1]...m[3]
+
+while( 1 )
+{
+	down( m[i+1]%4 );
+	down( m[i] );
+
+	CS
+
+	up( m[i] )
+	up( m[i+1]%4 )
+
+}
+
+p[0]	p[1]	p[2]	p[3]
+|		|		|		|
+|		|       |       |
+|		|       |       |
+|		|       |       |
+m[0]	m[1]	m[m[2]	m[m[3]
+
 
 
 
