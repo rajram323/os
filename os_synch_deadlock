@@ -1,7 +1,7 @@
 ########### sec 1 Introduction ###########
 gfg - https://tvsmotor.udemy.com/course/operating-systems-online-course/learn/lecture/13215020#overview
 
-### (1_1) ###
+### (1_1) Concept of Shard Memory ###
 -------
 |      |
 |------|
@@ -17,8 +17,11 @@ gfg - https://tvsmotor.udemy.com/course/operating-systems-online-course/learn/le
 |------|    
 
 
+P1 & P2 blocks containn PCB
+P1 & P2 cannot access each other directly
+They use one common shared memory at location 1000
 
-### (1_2) ###
+### (1_2) Need for Synchronization Mechanism - 1 ###
 High level ---> Assembly ---> Machine code
 
 f1(){
@@ -40,12 +43,15 @@ cout--;        LOAD COUNT R1; _____control change
 --
 }
 
-### (1_3) ###
+if Non premtive then ok
+if premtive then problem
+
+### (1_3) Need for Synchronization Mechanism - 2 ###
 1) Non premtive
 2) Synchronization mechanism
 
-p1-1,2,3,4,5 | p2-1,2,3 | p1-6,7
-
+p1-1,2,3,4,5      | p2-1,2,3 	| p1-6,7
+	load p1,inc     load p2,dec   str p1, str p2		(inconsistent data -1)
 
 ########### sec 2 Critical Section and Race Condition  ###########
 gfg - https://tvsmotor.udemy.com/course/operating-systems-online-course/learn/lecture/13331498#overview
@@ -54,31 +60,89 @@ gfg - https://tvsmotor.udemy.com/course/operating-systems-online-course/learn/le
 
 race condition --->
 
+f1(){
+---
+--
+cout++;       /// CRITICAL SECTION ///  1) LOAD COUNT R1; _____control change       /// CRITICAL SECTION /// 	
+---            							2) INCR R1;
+--             							3) STORE R1 COUNT; 
+--
+}
+
+f2(){
+---
+--
+cout--;       /// CRITICAL SECTION ///  1) LOAD COUNT R1; _____control change       /// CRITICAL SECTION ///   
+---            							2) DECR R1;
+--             							3) STORE R1 COUNT; 
+---
+--
+}
+
+CRITICAL SECTION - in code where we access shared memory
+
+one possible way of execution - load p1, load p2, p1 inc, p1 dec, str p1, str p2
+	5 become 4
+	5 become 6
+
+	but should be 5 - one inc and one dec
+
+	4 - p1-1 | p2-1 | p1-2,3 | p2-2,3
+	
+	6 - p1-1,2 | p2-1,2,3 | p1-3
+
+	5 - p1-1,2,3 | p2-1,2,3      or 	p2-1,2,3 | p1-1,2,3
+
+
+RACE CONDITION - depending on the order of execution we are getting different output 
+
 ### (2_2) Why Race Condition happens ###
+
+wrong ans bcz we are accesing cs at same time 
+
+process synchronization - no two process in critical section at same time
 
 ### (2_3) More on Critical Section and Non Critical Section ###
 
 critical section ---> It is the part of program where share memory is accessed.
 
-race condition ---> The order of execution of instructions of process defines the resulot produced.
+race condition ---> The order of execution of instructions of process defines the result produced.
 
-### (2_4) Synch  ###
-p1
+		p1	|	P2
+		
+		CS	    NCS		ok
+		NCS		CS		ok
+		NCS		NCS		ok
+		
+		CS		CS		problem
 
-NCS
------
-(entry section)
-----
-CS
----
-(exit section)
----
-NCS
 
-depending of entry and exit section there are many synch mechanism.
+### (2_4) Synchronization explained  ###
+p1						p2	
+                        
+1) NCS                  1) NCS
+2)                      2)
+----------------        3)
+(entry section)         ----------------
+-----------------       (entry section)
+          			    -----------------
+3) CS
+4)			            4) CS			
+-----------------       5)			
+(exit section)         -----------------
+-----------------       (exit section)
+5) NCS                 -----------------
+6)                      6) NCS
+7)
+
+single ticket gate
+
+how long it hold the process
+
+synch mechanism - depending of entry and exit section there are many synch mechanism.
 
 ########### sec 3 Various conditions of synch mechanism  ###########
-gfg - https://tvsmotor.udemy.com/course/operating-systems-online-course/learn/lecture/13331630#overview
+udemy - https://tvsmotor.udemy.com/course/operating-systems-online-course/learn/lecture/13331630#overview
 
 ### (3_1)  Basic Idea of Mutual Exclusion ###
 
@@ -90,26 +154,30 @@ mutual exclusion - a way of making sure that if one process is executing the CS,
 3) bounded waiting
 
 
-### (3_2)  Basic Idea of Mprogress ###
+### (3_2)  Basic Idea of progress ###
 
-progress - a way of making sure that if a process is not inside the CS(ir it is in NCS), then it will not block other process from entering the CS.
+progress - a way of making sure that if a process is not inside the CS(ie it is in NCS), then it will not block other process from entering the CS.
 
 ### (3_3)  Basic Idea of bounded waiting ###
 
 bounded waiting - a way of making sure that there wxists a bound (or limit) on the number of times other processes are allowed to enter the CS after a process has made a request to enter the CS and before that request is granted.
 
+generally entry section written in whilae loop
+
 ########### sec 4 LOCK synchronization mechanism  ###########
 udemy - https://tvsmotor.udemy.com/course/operating-systems-online-course/learn/lecture/13331686#overview
 
 ### (4_1) Synchronization with Lock variable and its disadvantage ###
+
+initially lock = 0
 -------
 | NCS |
 -------
 
-while(lock!=0)               1) LOAD LOCK R1
- lock=1                      2) CMP R1, #0
-                             3) JNZ step 1)
-                             4) STORE #1, LOCK
+while(lock!=0);        semicolon is very important      					1) LOAD LOCK R1				semicolon is very important
+			------> if prempted here many y process can enter              	2) CMP R1, #0
+	 lock=1																	3) JNZ step 1)
+																			4) STORE #1, LOCK
 -------
 | CS |
 -------
@@ -137,16 +205,22 @@ lock 1 ---> no of process inside CS = 1
 
 ### (4_4) Features of Lock Synchronization ###
 
+if a process express interst to execute cs then there should be limit/bound on the no of times other process can enter cs
+
       synch
   _____|_____     
 busy      nonbusy
 
 
 1) multi process solution
-2) busy waiting time solution
+2) busy waiting time solution --------------- it is solved by sleep mode
 3) implement at user mode
 4) no hardware support
 
+	/// LOCK VARIABLE ///
+	MUTUAL EXCLUSION - NO
+	PROGRESS		 - YES
+	BOUNDED WAITING  - NO
 
 ########### sec 5 TSL synchronization mechanism  ###########
 udemy - https://tvsmotor.udemy.com/course/operating-systems-online-course/learn/lecture/13331788#overview
