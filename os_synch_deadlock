@@ -236,18 +236,40 @@ JNZ - jump if zeroflag is not set
 CMP A,B
   if A=B, z=1
   else z=0
+  
+  1) LOAD LOCK R1
+  2) CMP R1, #0-----------------------------------compare r1 with 0 if true then set z flag to 1....................if lock 0 then z=1
+  3) JNZ step 1)----------------------------------jump to 1) if z flag is not set...but in above z flag is set
+  4) STORE #1, LOCK
+-
+| CS |   
 
 if z=1 , we say z flag is set
 else z flagi is not set
 
 ### (5_2) When Mutual Exclusion can be violated in Lock synchronization mechanism ###
 
+load #5 r1			R1---5
+load #3 r2			R2---3
+-----------------------before going to other inst r1,r2 value must be saved somewhere so that when control comes back it gives correct result
+add r1,r2
+load r2,r3
+
+R1---5, del5, 6				save 5,3 somewhere
+R2---3, del3, 7
+
+load #6 r1			R1---5, del5, 6
+load #7 r2			R2---3, del3, 7
+add r1,r2
+load r2,r3
+
+
 -------
 | NCS |
 -------
 
-while(lock!=0)               1) LOAD LOCK R1______________control change
- lock=1                      2) CMP R1, #0
+while(lock!=0)               1) LOAD LOCK R1______________control change me violated many process in cs
+ lock=1                      2) CMP R1, #0________________control change me violated many process in cs
                              3) JNZ step 1)
                              4) STORE #1, LOCK
 -------
@@ -260,11 +282,19 @@ lock = 0                     1) STORE #0 LOCK
 | NCS |
 -------
 
+load inst then prempted
 p1: 1 | p2: 1,2,3,4 | p1: 2,3,4 
+r1=0      r1=0
+z=1       z=1......................................both 1 so two process can be in cs
 
+load,cmp inst then prempted
 p1: 1,2 | p2: 1,2,3,4 | p1: 2,3,4 
 r1=0      r1=0
-z=0       z=1 
+z=1       z=1......................................both 1 so two process can be in cs
+
+
+
+both p1, p2
 
 ### (5_3)  ###
 
@@ -273,10 +303,24 @@ z=0       z=1
 3) JNZ step 1)       _____no
 4) STORE #1, LOCK                    
 
+
+move the 4 inst to (2) line
+
 1) LOAD LOCK R1      _____no
-2) STORE #1, LOCK    _____no
+2) STORE #1, LOCK    _____prem can happen not violate me
 3) CMP R1,#0    
 4) JNZ step 1)
+
+p1: 1,2,3 | p2: 1,2,3,4			me violated
+r1=0		r1=0
+z=1			z=1
+
+p1: 1,2,3,4 | p2: 1,2,...1			me not violated
+r1=0		r1=1
+z=1			z=0		
+
+
+no prempetion btw inst (1) and int (4) 		
 
 ### 5_4 TSL Synchronization Mechanism Explained ###
 
@@ -298,7 +342,7 @@ TSL(LOCK){
 }
 
 instruction set  - ( ADD, JUMP, LOAD, TSL)
-h/w or platform independent
+h/w or platform dependent
 
 ### 5_5 TSL - Mutual Exclusion, Progress, Bounded Waiting ###
 
@@ -309,9 +353,9 @@ h/w or platform independent
 
 ### 5_6 Features of TSL Synchronization Mechanism ###
 
-1) Busy waiting soln    - no
-2) multi process soln   - yes
-3) hw support necessary - no
+1) Busy waiting soln    - yes....dis advantage
+2) multi process soln   - yes....advantage
+3) hw support necessary - yes....disadvantage 
 4) implement in user mode
 
 ########### sec 6 problems with TSL ###########
@@ -324,7 +368,7 @@ instruction as follows:
 
   void enters(x)
   {
-      while(testandset(x);
+      while(testandset(x));--------------check semicolon ....return initial value of lock, if 1 the infinite loop, if 0 enter cs
   }
 
   CS
@@ -345,7 +389,7 @@ Boolean testandset(x)
     Bolean R1;
     R1=x;
     x=1;
-    rerturn R1;
+    rerturn R1;...............why it is written ? use the tsl inside while() loop...return initial value of lock
 }
 
 ### 6_2 Checking of Starvation Problem ###
@@ -354,14 +398,23 @@ Boolean testandset(x)
 P1, P2, P3....P500
 _________________>500 
 
+not in fifo order so B) is false
+if process enter cs in fifo order then there will be no starvation
+
 ### 6_2 Checking of Starvation Problem ###
 deadlock circular wait
+if lock=0 whoever request first will enter cs
 
 ########### sec 7 Strict alteratin syschronization mechanism ###########
 udemy - https://tvsmotor.udemy.com/course/operating-systems-online-course/learn/lecture/13332126#overview
 
 ### 7_1 Strict Alternation Synchronization - Mutual Exclusion, Progress ###
-while(1)											                      |	while(1)																			
+
+only two process
+
+at atart turn can be 0 or 1
+
+while(1)											|	while(1)																			
 {                                                   |    {   
 													                          |		 NCS	
     while( turn==1 )       // entry section         |        while( turn==0 )       // entry section
@@ -371,17 +424,31 @@ while(1)											                      |	while(1)
     turn = 1;                                       |       turn = 0;
 }                                                   |   }
     
+	
+progress - progress is not granted as p2 in ncs can block p1 to enter cc as turn = 1
+	
 ### 7_2 Strict Alternation - Bounded Waiting ###
 bounded waiting - yes
 
 one after another
 
-### 7_3 Strict Alternation - Bounded Waiting ###
+### 7_3 Features of strict alteration synchronization mechanism ###
 
 1) busy waiting soln
 2) 2 process soln
 3) h/w or platform independent
 4) implement in user code
+
+////// STRICT ALTERATION METHOD //////
+		MUTUAL EXCLUSION - YES
+		PROGRESS		 - NO
+		BOUNDED WAITING  - YES
+		
+		BUSY WAITING	 - YES	
+		HW INDPT		 - YES
+		2 PROCESS		 - YES   MANY PROCESS NO
+		
+		IMPLEMENT USER MODE  - YES	
 
 ### 7_4 Features of Strict Alternation Synchronization Mechanism ###
 consider the methods used by process P1 and P2 for accesing their critical sections whenever needed as given below.
@@ -394,6 +461,14 @@ while(s1 == s2)       |      while( s1 != s2 )
 CS                            CS
 
 s1=s2                 |    s1 != s2
+
+
+s1  |  s2
+0		0----p2
+0		1----p1
+1		0----p1
+1		1----p2
+
 
 what of the following is true/
 a) guarantee ME but not progress
@@ -414,12 +489,19 @@ while( 1 )
 }
 
 
-me
-progress
-bounded waiting
+me				yes
+progress		yes
+bounded waiting yes
+
+
+user can forget to enable interrupt...so process can run after this
 
 ### 8_2 Features of Disabling Interrupts and its disadvantage ###
 	hw dependence
+	user mode----no need to call system call
+	
+	user prog - can interrupt any time
+	kernel prog-system call-sleep() - no interrupt
 
 ########### sec 9  interested Variabls Synchronization Mechanism ###########
 udemy - https://tvsmotor.udemy.com/course/operating-systems-online-course/learn/lecture/13332192#overview
@@ -451,12 +533,33 @@ while( 1 )								|	while( 1 )
 ### 8_2 Interested Synchronization Mutual Exclusion ###
 Mutual Exclusion - yes
 
+### 8_3 Interested Synchronization - deadlock ###
 
-### 8_3 Interested Synchronization - progress ###
+P0											
+while( 1 )								|	while( 1 )					
+{                                       |   {                             
+	NON CS                              |   	NON CS                    
+----------------------              	|   ----------------------                         
+	Interested 0 = T___________intrpt	|   	Interested 0 = T	___________intrpt		both interept so both became deadlock	
+	while( Interested = T)          	|   	while( Interested = T)    
+----------------------					|   ----------------------						
+
+	CS                                  |   	CS   
+
+----------------------             	 	|   ---------------------- 									|   							
+	Interested 0 = F                    |   	Interested 0 = F          
+----------------------              	|   ----------------------                                     |    
+}                                       |   }
+
+
+### 8_4 Interested Synchronization - progress ###
 If no process is inside the CS and some processes wish to enter the CS, then the decision on which process to enter the CS
 should only be taken by processes which are not in NCS and this decision should not be postponed indefinitely.
 
  If a process is in NCS, then it shouldnot block other process from entering the CS.
+ 
+ p1,p2 interested p3 not interested is in non-cs
+ p1,p2 should decide who will enter cs it should not be decided by other process
 
 if ... deadlock ---> progress___no
 
@@ -478,15 +581,19 @@ while( 1 )                          |       while( 1 )
 									|       								
 }									|       }								
 
-### 8_4 Interested Synchronization - progress continued ###
+### 8_5 Interested Synchronization - progress continued ###
 
 Interested
 
-### 8_5 Interested Synchronization - bounded waiting ###
+### 8_6 Interested Synchronization - bounded waiting ###
 
 Mutual Excution -	yes 
 Progress		-	no
-Deadlock		-	no
+Deadlock		-	yes
+bounded waiting -   yes
+hw dependence	-   no
+
+if deadlock then no progress
 
 ########### sec 10  Peterson Synchronization Mechanism ###########
 udemy - https://tvsmotor.udemy.com/course/operating-systems-online-course/learn/lecture/13332240#overview
