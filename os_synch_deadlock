@@ -149,7 +149,7 @@ udemy - https://tvsmotor.udemy.com/course/operating-systems-online-course/learn/
 mutual exclusion - a way of making sure that if one process is executing the CS, then other process cannot enter the CS
                    until the executing process comes out of the CS.
 
-					no two process are inside the cs.
+					no two process are inside the cs at same time.
 
 1) mutual exclusion
 2) progress
