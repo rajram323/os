@@ -162,7 +162,8 @@ progress - a way of making sure that if a process is not inside the CS(ie it is 
 
 ### (3_3)  Basic Idea of bounded waiting ###
 
-bounded waiting - a way of making sure that there wxists a bound (or limit) on the number of times other processes are allowed to enter the CS after a process has made a request to enter the CS and before that request is granted.
+bounded waiting - a way of making sure that there wxists a bound (or limit) on the number of times other processes are allowed to enter the CS after 
+				  a process has made a request to enter the CS and before that request is granted.
 
 generally entry section written in whilae loop
 
