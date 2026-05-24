@@ -150,6 +150,7 @@ mutual exclusion - a way of making sure that if one process is executing the CS,
                    until the executing process comes out of the CS.
 
 					no two process are inside the cs at same time.
+					at single time only one process can be inside cs.
 
 1) mutual exclusion
 2) progress
