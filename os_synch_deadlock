@@ -43,7 +43,7 @@ cout--;        LOAD COUNT R1; _____control change
 --
 }
 
-if Non premtive then ok
+if Non premtive then ok - but if non preemptive then if go for io cpu will be idle and cpu efficiency will decerease
 if premtive then problem
 
 ### (1_3) Need for Synchronization Mechanism - 2 ###
