@@ -383,10 +383,10 @@ instruction as follows:
   }
 
 x is initialised to 0 which of the following is true?
-A) the solution is starvation free
-B) process enter cs in FIFO order
-C) more than 1 process can enter the CS at the same time
-D) the above solution is deadflock free
+A) the solution is starvation free...no
+B) process enter cs in FIFO order...no
+C) more than 1 process can enter the CS at the same time...no
+D) the above solution is deadflock free...yes
 
 Boolean testandset(x)
 {
@@ -407,6 +407,9 @@ if process enter cs in fifo order then there will be no starvation
 
 ### 6_2 Checking of Starvation Problem ###
 deadlock circular wait
+p1 is waiting for p2 to enter cs
+p is waiting for p1 to enter cs
+
 if lock=0 whoever request first will enter cs
 
 ########### sec 7 Strict alteratin syschronization mechanism ###########
